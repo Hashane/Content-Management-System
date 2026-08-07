@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\V1\Admin\PageController;
 use App\Http\Controllers\Api\V1\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Api\V1\Auth\MeController;
 use App\Http\Controllers\Api\V1\Auth\TokenController;
@@ -13,5 +14,11 @@ Route::prefix('v1')->group(function (): void {
         Route::post('/logout', [AuthenticatedSessionController::class, 'destroy']);
         Route::get('/me', MeController::class);
         Route::delete('/auth/tokens/current', [TokenController::class, 'destroy']);
+
+        Route::prefix('admin')->group(function (): void {
+            Route::get('/pages/trash', [PageController::class, 'trash']);
+            Route::post('/pages/{page}/restore', [PageController::class, 'restore'])->withTrashed();
+            Route::apiResource('pages', PageController::class);
+        });
     });
 });
