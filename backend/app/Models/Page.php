@@ -2,13 +2,21 @@
 
 namespace App\Models;
 
+use App\Enums\PageStatus;
+use App\Observers\PageObserver;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
+
+#[ObservedBy([PageObserver::class])]
 class Page extends Model
 {
     /** @use HasFactory<\Database\Factories\PageFactory> */
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     protected $fillable = [
         'title',
@@ -17,11 +25,44 @@ class Page extends Model
         'cover_image_path',
         'status',
         'published_at',
-        'created_by',
     ];
 
-    public function getRouteKeyName(): string
+    /**
+     * @return array<string, string>
+     */
+    protected function casts(): array
     {
-        return 'slug';
+        return [
+            'status' => PageStatus::class,
+            'published_at' => 'datetime',
+        ];
+    }
+
+    public function creator(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
+
+    public function updater(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'updated_by');
+    }
+
+    public function deleter(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'deleted_by');
+    }
+
+    /**
+     * Published pages that are due to be visible
+     * 
+     */
+    public function scopePublishedAndDue(Builder $query): Builder
+    {
+        return $query->where('status', PageStatus::Published)
+            ->where(function (Builder $query) {
+                $query->whereNull('published_at')
+                    ->orWhere('published_at', '<=', now());
+            });
     }
 }
