@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Database\Factories\MenuFactory;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -10,7 +11,7 @@ use Illuminate\Support\Str;
 
 class Menu extends Model
 {
-    /** @use HasFactory<\Database\Factories\MenuFactory> */
+    /** @use HasFactory<MenuFactory> */
     use HasFactory, SoftDeletes;
 
     protected $fillable = [

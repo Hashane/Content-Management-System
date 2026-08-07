@@ -12,7 +12,7 @@ class MenuPolicy
      */
     public function viewAny(User $user): bool
     {
-       return $user->can('menus.list');
+        return $user->can('menus.list');
     }
 
     /**
