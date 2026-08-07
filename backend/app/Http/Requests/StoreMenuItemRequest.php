@@ -2,28 +2,40 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\MenuItemType;
 use Illuminate\Contracts\Validation\ValidationRule;
+use App\Models\MenuItem;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
+use Illuminate\Validation\Rules\Enum;
 
 class StoreMenuItemRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
     public function authorize(): bool
     {
-        return false;
+        return $this->user()->can('create', MenuItem::class);
     }
 
     /**
-     * Get the validation rules that apply to the request.
-     *
      * @return array<string, ValidationRule|array<mixed>|string>
      */
     public function rules(): array
     {
         return [
-            //
+            'label' => ['required', 'string', 'max:255'],
+            'item_type' => ['required', new Enum(MenuItemType::class)],
+            'page_id' => [
+                'nullable',
+                'integer',
+                'required_if:item_type,page',
+                'prohibited_if:item_type,group',
+                'exists:pages,id',
+            ],
+            'parent_id' => [
+                'nullable',
+                'integer',
+                Rule::exists('menu_items', 'id')->where('menu_id', $this->route('menu')->id),
+            ],
         ];
     }
 }
