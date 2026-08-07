@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Page;
 use App\Models\User;
 use Database\Seeders\PermissionSeeder;
 use Database\Seeders\RoleSeeder;
@@ -68,5 +69,34 @@ class PageManagementTest extends TestCase
             'status' => 'not-a-real-status',
         ])->assertUnprocessable()
             ->assertJsonValidationErrors(['title', 'body_html', 'status']);
+    }
+
+    public function test_duplicate_slugs_are_automatically_deduplicated(): void
+    {
+        $admin = $this->admin();
+
+        Page::factory()->create(['slug' => 'about-me']);
+
+        $this->actingAs($admin)->postJson('/api/v1/admin/pages', [
+            'title' => 'About Me',
+            'body_html' => '<p>Jude Hashane</p>',
+            'status' => 'draft',
+        ])->assertCreated();
+
+        $this->assertDatabaseHas('pages', ['slug' => 'about-me-1']);
+    }
+
+    public function test_explicit_duplicate_slug_is_rejected_by_validation(): void
+    {
+        $admin = $this->admin();
+
+        Page::factory()->create(['slug' => 'taken-slug']);
+
+        $this->actingAs($admin)->postJson('/api/v1/admin/pages', [
+            'title' => 'Something Else',
+            'slug' => 'taken-slug',
+            'body_html' => '<p>Hello</p>',
+            'status' => 'draft',
+        ])->assertUnprocessable()->assertJsonValidationErrors(['slug']);
     }
 }
