@@ -4,7 +4,6 @@ namespace App\Policies;
 
 use App\Models\Menu;
 use App\Models\User;
-use Illuminate\Auth\Access\Response;
 
 class MenuPolicy
 {
@@ -13,7 +12,7 @@ class MenuPolicy
      */
     public function viewAny(User $user): bool
     {
-        return false;
+       return $user->can('menus.list');
     }
 
     /**
@@ -21,7 +20,7 @@ class MenuPolicy
      */
     public function view(User $user, Menu $menu): bool
     {
-        return false;
+        return $user->can('menus.list');
     }
 
     /**
@@ -29,7 +28,7 @@ class MenuPolicy
      */
     public function create(User $user): bool
     {
-        return false;
+        return $user->can('menus.manage');
     }
 
     /**
@@ -37,7 +36,7 @@ class MenuPolicy
      */
     public function update(User $user, Menu $menu): bool
     {
-        return false;
+        return $user->can('menus.manage');
     }
 
     /**
@@ -45,7 +44,7 @@ class MenuPolicy
      */
     public function delete(User $user, Menu $menu): bool
     {
-        return false;
+        return $user->can('menus.manage');
     }
 
     /**
@@ -53,7 +52,7 @@ class MenuPolicy
      */
     public function restore(User $user, Menu $menu): bool
     {
-        return false;
+        return $user->can('menus.manage');
     }
 
     /**
