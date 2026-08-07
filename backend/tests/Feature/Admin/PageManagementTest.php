@@ -184,4 +184,42 @@ class PageManagementTest extends TestCase
 
         $this->assertDatabaseHas('pages', ['id' => $page->id, 'deleted_at' => null, 'deleted_by' => null]);
     }
+
+    public function test_deleted_pages_do_not_appear_in_the_default_listing(): void
+    {
+        $admin = $this->admin();
+        $page = Page::factory()->create();
+        $page->delete();
+
+        $response = $this->actingAs($admin)->getJson('/api/v1/admin/pages');
+
+        $response->assertOk();
+        $this->assertNotContains($page->id, collect($response->json('data.data'))->pluck('id'));
+    }
+
+    public function test_pages_can_be_searched_by_title(): void
+    {
+        $admin = $this->admin();
+        Page::factory()->create(['title' => 'Company Overview']);
+        Page::factory()->create(['title' => 'Contact Page']);
+
+        $response = $this->actingAs($admin)->getJson('/api/v1/admin/pages?search=Company');
+
+        $titles = collect($response->json('data.data'))->pluck('title');
+        $this->assertTrue($titles->contains('Company Overview'));
+        $this->assertFalse($titles->contains('Contact Page'));
+    }
+
+    public function test_pages_can_be_filtered_by_status(): void
+    {
+        $admin = $this->admin();
+        Page::factory()->draft()->create(['title' => 'Draft Page']);
+        Page::factory()->published()->create(['title' => 'Published Page']);
+
+        $response = $this->actingAs($admin)->getJson('/api/v1/admin/pages?status=published');
+
+        $titles = collect($response->json('data.data'))->pluck('title');
+        $this->assertTrue($titles->contains('Published Page'));
+        $this->assertFalse($titles->contains('Draft Page'));
+    }
 }
