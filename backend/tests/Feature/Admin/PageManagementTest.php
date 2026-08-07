@@ -99,4 +99,89 @@ class PageManagementTest extends TestCase
             'status' => 'draft',
         ])->assertUnprocessable()->assertJsonValidationErrors(['slug']);
     }
+
+    public function test_stored_html_is_sanitized(): void
+    {
+        $admin = $this->admin();
+
+        $this->actingAs($admin)->postJson('/api/v1/admin/pages', [
+            'title' => 'XSS Test',
+            'body_html' => '<p>Safe</p><script>alert("You are hacked!!")</script>',
+            'status' => 'draft',
+        ])->assertCreated();
+
+        $page = Page::firstWhere('title', 'XSS Test');
+        $this->assertStringNotContainsString('<script>', $page->body_html);
+        $this->assertStringContainsString('<p>Safe</p>', $page->body_html);
+    }
+
+    public function test_admin_can_update_a_page(): void
+    {
+        $admin = $this->admin();
+        $page = Page::factory()->create(['title' => 'Old Title']);
+
+        $this->actingAs($admin)->putJson("/api/v1/admin/pages/{$page->id}", [
+            'title' => 'New Title',
+            'body_html' => '<p>Updated</p>',
+            'status' => 'draft',
+        ])->assertOk();
+
+        $this->assertDatabaseHas('pages', [
+            'id' => $page->id,
+            'title' => 'New Title',
+            'updated_by' => $admin->id,
+        ]);
+    }
+
+    public function test_moderator_can_create_and_update_but_not_delete_or_restore(): void
+    {
+        $moderator = $this->moderator();
+        $page = Page::factory()->create();
+
+        $this->actingAs($moderator)->postJson('/api/v1/admin/pages', [
+            'title' => 'Moderator Page',
+            'body_html' => '<p>Hi</p>',
+            'status' => 'draft',
+        ])->assertCreated();
+
+        $this->actingAs($moderator)->putJson("/api/v1/admin/pages/{$page->id}", [
+            'title' => 'Edited by moderator',
+            'body_html' => '<p>Hi</p>',
+            'status' => 'draft',
+        ])->assertOk();
+
+        $this->actingAs($moderator)
+            ->deleteJson("/api/v1/admin/pages/{$page->id}")
+            ->assertForbidden();
+
+        $page->delete();
+
+        $this->actingAs($moderator)
+            ->postJson("/api/v1/admin/pages/{$page->id}/restore")
+            ->assertForbidden();
+    }
+
+    public function test_admin_can_delete_view_trash_and_restore_a_page(): void
+    {
+        $admin = $this->admin();
+        $page = Page::factory()->create();
+
+        $this->actingAs($admin)
+            ->deleteJson("/api/v1/admin/pages/{$page->id}")
+            ->assertOk();
+
+        $this->assertSoftDeleted('pages', ['id' => $page->id]);
+        $this->assertDatabaseHas('pages', ['id' => $page->id, 'deleted_by' => $admin->id]);
+
+        $this->actingAs($admin)
+            ->getJson('/api/v1/admin/pages/trash')
+            ->assertOk()
+            ->assertJsonPath('data.data.0.id', $page->id);
+
+        $this->actingAs($admin)
+            ->postJson("/api/v1/admin/pages/{$page->id}/restore")
+            ->assertOk();
+
+        $this->assertDatabaseHas('pages', ['id' => $page->id, 'deleted_at' => null, 'deleted_by' => null]);
+    }
 }
