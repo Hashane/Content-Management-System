@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\V1\Admin\MenuController;
 use App\Http\Controllers\Api\V1\Admin\PageController;
 use App\Http\Controllers\Api\V1\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Api\V1\Auth\MeController;
@@ -19,6 +20,9 @@ Route::prefix('v1')->group(function (): void {
             Route::get('/pages/trash', [PageController::class, 'trash']);
             Route::post('/pages/{page}/restore', [PageController::class, 'restore'])->withTrashed();
             Route::apiResource('pages', PageController::class);
+
+            Route::post('/menus/{menu}/restore', [MenuController::class, 'restore'])->withTrashed();
+            Route::apiResource('menus', MenuController::class);
         });
     });
 });
