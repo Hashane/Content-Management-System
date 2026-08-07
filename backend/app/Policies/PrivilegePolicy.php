@@ -20,7 +20,7 @@ class PrivilegePolicy
      */
     public function view(User $user, Permission $permission): bool
     {
-         return $user->can('privileges.list');
+        return $user->can('privileges.list');
     }
 
     /**
