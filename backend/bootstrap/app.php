@@ -1,8 +1,10 @@
 <?php
 
+use App\Http\Middleware\AddSecurityHeaders;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
+use Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -12,7 +14,13 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        //
+        $middleware->prepend(AddSecurityHeaders::class);
+        $middleware->prepend(EnsureFrontendRequestsAreStateful::class);
+
+        // Avoids false CSRF failures for token clients sharing a stateful domain (e.g. localhost).
+        $middleware->validateCsrfTokens(except: [
+            'api/v1/auth/tokens',
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //
