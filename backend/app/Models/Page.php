@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Str;
 
 #[ObservedBy([PageObserver::class])]
 class Page extends Model
@@ -63,5 +64,24 @@ class Page extends Model
                 $query->whereNull('published_at')
                     ->orWhere('published_at', '<=', now());
             });
+    }
+
+    public static function resolveUniqueSlug(?string $slug, string $title, ?int $ignoreId = null): string
+    {
+        $base = Str::slug($slug ?: $title);
+        $candidate = $base;
+        $suffix = 1;
+
+        while (
+            static::withTrashed()
+                ->where('slug', $candidate)
+                ->when($ignoreId, fn (Builder $query) => $query->whereKeyNot($ignoreId))
+                ->exists()
+        ) {
+            $candidate = "{$base}-{$suffix}";
+            $suffix++;
+        }
+
+        return $candidate;
     }
 }
