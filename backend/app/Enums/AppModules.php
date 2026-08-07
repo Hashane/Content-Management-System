@@ -8,8 +8,7 @@ enum AppModules: string
     case Menus = 'menus';
     case Pages = 'pages';
     case Roles = 'roles';
-    case Priviledges = 'permissions';
-    case ActivityLog = 'activity-log';
+    case Privileges = 'privileges';
 
     public function label(): string
     {
