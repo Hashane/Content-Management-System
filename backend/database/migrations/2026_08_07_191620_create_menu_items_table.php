@@ -13,13 +13,15 @@ return new class extends Migration
     {
         Schema::create('menu_items', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('menu_id')->constrained('menus')->onDelete('cascade');
-            $table->foreignId('parent_id')->nullable()->constrained('menu_items')->onDelete('cascade');
-            $table->bigInteger('page_id')->unsigned();
+            $table->foreignId('menu_id')->constrained('menus')->cascadeOnDelete();
+            $table->foreignId('parent_id')->nullable()->constrained('menu_items')->cascadeOnDelete();
+            $table->foreignId('page_id')->nullable()->constrained('pages')->nullOnDelete();
             $table->string('label');
-            $table->integer('position');
+            $table->string('item_type');
+            $table->unsignedInteger('position')->default(0);
 
             $table->timestamps();
+
             $table->index(['menu_id', 'parent_id', 'position']);
         });
     }
