@@ -1,66 +1,48 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api\V1\Admin;
 
+use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreMenuItemRequest;
 use App\Http\Requests\UpdateMenuItemRequest;
+use App\Http\Resources\MenuItemResource;
+use App\Models\Menu;
 use App\Models\MenuItem;
+use Illuminate\Http\JsonResponse;
 
 class MenuItemController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function store(StoreMenuItemRequest $request, Menu $menu): JsonResponse
     {
-        //
+        $data = $request->validated();
+        $data['menu_id'] = $menu->id;
+        $data['position'] = MenuItem::where('menu_id', $menu->id)
+            ->where('parent_id', $data['parent_id'] ?? null)
+            ->max('position');
+        $data['position'] = $data['position'] === null ? 0 : $data['position'] + 1;
+
+        $item = MenuItem::create($data);
+
+        return response()->success(new MenuItemResource($item), 'Menu item created.', 201);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function update(UpdateMenuItemRequest $request, Menu $menu, MenuItem $item): JsonResponse
     {
-        //
+        abort_if($item->menu_id !== $menu->id, 404);
+
+        $item->update($request->validated());
+
+        return response()->success(new MenuItemResource($item->fresh()), 'Menu item updated.');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StoreMenuItemRequest $request)
+    public function destroy(Menu $menu, MenuItem $item): JsonResponse
     {
-        //
-    }
+        abort_if($item->menu_id !== $menu->id, 404);
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(MenuItem $menuItem)
-    {
-        //
-    }
+        $this->authorize('delete', $item);
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(MenuItem $menuItem)
-    {
-        //
-    }
+        $item->delete();
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdateMenuItemRequest $request, MenuItem $menuItem)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(MenuItem $menuItem)
-    {
-        //
+        return response()->success(null, 'Menu item deleted.');
     }
 }
