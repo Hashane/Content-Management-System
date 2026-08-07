@@ -76,7 +76,6 @@ class SpaAuthenticationTest extends TestCase
 
     /**
      * Simulate request from SPA
-     * 
      */
     private function fromFrontend(): static
     {
