@@ -3,8 +3,8 @@
 namespace App\Http\Requests;
 
 use App\Enums\MenuItemType;
-use Illuminate\Contracts\Validation\ValidationRule;
 use App\Models\MenuItem;
+use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Enum;
@@ -34,7 +34,7 @@ class StoreMenuItemRequest extends FormRequest
             'parent_id' => [
                 'nullable',
                 'integer',
-                Rule::exists('menu_items', 'id')->where('menu_id', $this->route('menu')->id),
+                Rule::exists('menu_items', 'id')->where('menu_id', $this->route('menu')?->id),
             ],
         ];
     }
