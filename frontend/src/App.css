@@ -141,3 +141,40 @@
   flex-direction: column;
   gap: 4px;
 }
+
+.menu-add-form {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+.menu-tree-editor {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-width: 480px;
+}
+
+.menu-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg);
+}
+
+.menu-drag-handle {
+  cursor: grab;
+  color: var(--text);
+  touch-action: none;
+}
+
+.menu-row-page {
+  color: var(--text);
+  font-size: 14px;
+}
+
+.menu-row-delete {
+  margin-left: auto;
+}
