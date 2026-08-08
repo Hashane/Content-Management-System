@@ -9,12 +9,12 @@ class MenuItemPolicy
 {
     public function viewAny(User $user): bool
     {
-        return $user->can('menus.list');
+        return $user->can('menus.manage');
     }
 
     public function view(User $user, MenuItem $menuItem): bool
     {
-        return $user->can('menus.list');
+        return $user->can('menus.manage');
     }
 
     public function create(User $user): bool
