@@ -20,6 +20,10 @@ class PageController extends Controller
             ->with(['creator', 'updater'])
             ->when($request->filled('search'), fn ($query) => $query->where('title', 'like', '%'.$request->string('search').'%'))
             ->when($request->filled('status'), fn ($query) => $query->where('status', $request->string('status')->value()))
+            ->when($request->filled('menu_id'), fn ($query) => $query->whereHas(
+                'menuItems',
+                fn ($menuItemQuery) => $menuItemQuery->where('menu_id', $request->integer('menu_id'))
+            ))
             ->latest()
             ->paginate($request->integer('per_page', 15));
 
