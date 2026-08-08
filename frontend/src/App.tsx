@@ -3,6 +3,8 @@ import { HomePage } from './pages/HomePage';
 import { PageView } from './pages/PageView';
 import { LoginPage } from './pages/admin/LoginPage';
 import { AdminLayout } from './pages/admin/AdminLayout';
+import { PagesListPage } from './pages/admin/PagesListPage';
+import { PageFormPage } from './pages/admin/PageFormPage';
 import { RequireAuth } from './auth/RequireAuth';
 import './App.css';
 
@@ -15,7 +17,9 @@ function App() {
       <Route path="/admin/login" element={<LoginPage />} />
       <Route element={<RequireAuth />}>
         <Route path="/admin" element={<AdminLayout />}>
-          <Route path="pages" element={<p>Pages admin.</p>} />
+          <Route path="pages" element={<PagesListPage />} />
+          <Route path="pages/new" element={<PageFormPage />} />
+          <Route path="pages/:id/edit" element={<PageFormPage />} />
           <Route path="menu" element={<p>Menu admin.</p>} />
         </Route>
       </Route>
