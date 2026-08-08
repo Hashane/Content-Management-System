@@ -11,6 +11,15 @@ use Spatie\Permission\PermissionRegistrar;
 
 class RoleController extends Controller
 {
+    public function index(): JsonResponse
+    {
+        $this->authorize('viewAny', Role::class);
+
+        $roles = Role::with('permissions')->orderBy('name')->get();
+
+        return response()->success(RoleResource::collection($roles));
+    }
+
     public function syncPrivileges(SyncRolePrivilegesRequest $request, Role $role): JsonResponse
     {
         $role->syncPermissions($request->validated('privileges', []));

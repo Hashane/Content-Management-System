@@ -21,3 +21,60 @@ export interface AuthUser {
   roles: string[];
   privileges: string[];
 }
+
+export type PageStatus = 'draft' | 'published';
+
+export interface AdminPage {
+  id: number;
+  title: string;
+  slug: string;
+  body_html: string;
+  cover_image_url: string | null;
+  status: PageStatus;
+  published_at: string | null;
+  created_by: { id: number; name: string } | null;
+  updated_by: { id: number; name: string } | null;
+  deleted_at: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface PaginatedResponse<T> {
+  data: T[];
+  meta: {
+    current_page: number;
+    last_page: number;
+    total: number;
+  };
+}
+
+export type MenuItemType = 'group' | 'page';
+
+export interface AdminMenuItemNode {
+  id: number;
+  label: string;
+  item_type: MenuItemType;
+  page_id: number | null;
+  position: number;
+  children: AdminMenuItemNode[];
+}
+
+export interface FlatMenuNode {
+  id: number;
+  label: string;
+  item_type: MenuItemType;
+  page_id: number | null;
+  depth: number;
+  parentId: number | null;
+}
+
+export interface AdminRole {
+  id: number;
+  name: string;
+  privileges: string[];
+}
+
+export interface Privilege {
+  id: number;
+  name: string;
+}

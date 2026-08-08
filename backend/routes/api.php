@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\V1\Admin\MenuController;
 use App\Http\Controllers\Api\V1\Admin\MenuItemController;
 use App\Http\Controllers\Api\V1\Admin\PageController;
+use App\Http\Controllers\Api\V1\Admin\PrivilegeController;
 use App\Http\Controllers\Api\V1\Admin\RoleController;
 use App\Http\Controllers\Api\V1\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Api\V1\Auth\MeController;
@@ -36,7 +37,10 @@ Route::prefix('v1')->group(function (): void {
             Route::patch('/menu/items/{item}/move', [MenuItemController::class, 'move']);
             Route::delete('/menu/items/{item}', [MenuItemController::class, 'destroy']);
 
+            Route::get('/roles', [RoleController::class, 'index']);
             Route::patch('/roles/{role}/privileges', [RoleController::class, 'syncPrivileges']);
+
+            Route::get('/privileges', [PrivilegeController::class, 'index']);
         });
     });
 });
