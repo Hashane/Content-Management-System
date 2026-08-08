@@ -67,3 +67,14 @@ export interface FlatMenuNode {
   depth: number;
   parentId: number | null;
 }
+
+export interface AdminRole {
+  id: number;
+  name: string;
+  privileges: string[];
+}
+
+export interface Privilege {
+  id: number;
+  name: string;
+}
