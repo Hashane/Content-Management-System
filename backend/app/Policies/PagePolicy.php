@@ -52,7 +52,7 @@ class PagePolicy
      */
     public function restore(User $user, Page $page): bool
     {
-        return $user->can('pages.restore');
+        return $user->can('pages.delete');
     }
 
     /**

@@ -10,7 +10,6 @@
     "license": "MIT",
     "require": {
         "php": "^8.2",
-        "darkaonline/l5-swagger": "^11.1",
         "judehashane/seatbelt": "^1.1",
         "laravel/framework": "^12.0",
         "laravel/sanctum": "^4.0",
@@ -19,6 +18,8 @@
         "spatie/laravel-permission": "^8.3"
     },
     "require-dev": {
+        "andreaselia/laravel-api-to-postman": "^2.3",
+        "dedoc/scramble": "^0.13.39",
         "fakerphp/faker": "^1.23",
         "laravel/pail": "^1.2.2",
         "laravel/pint": "^1.24",
