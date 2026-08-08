@@ -131,7 +131,7 @@ return [
 
     'formdata' => [
         'email' => 'admin@cms.com',
-        'password' => 'password',
+        'password' => 'Password123!',
     ],
 
     /*

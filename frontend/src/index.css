@@ -14,6 +14,7 @@
   --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
   --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
   --mono: ui-monospace, Consolas, monospace;
+  --display: 'Fraunces', var(--heading);
 
   font: 18px/145% var(--sans);
   letter-spacing: 0.18px;
@@ -51,15 +52,21 @@
 }
 
 #root {
-  width: 1126px;
-  max-width: 100%;
+  max-width: 720px;
   margin: 0 auto;
-  text-align: center;
-  border-inline: 1px solid var(--border);
+  padding: 32px 24px;
   min-height: 100svh;
-  display: flex;
-  flex-direction: column;
   box-sizing: border-box;
+}
+
+#root:has(.admin-shell) {
+  max-width: none;
+  margin: 0;
+  padding: 0;
+}
+
+a {
+  color: var(--accent);
 }
 
 body {
