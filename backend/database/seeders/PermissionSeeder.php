@@ -13,8 +13,8 @@ class PermissionSeeder extends Seeder
      * @var array<string, list<string>>
      */
     private const MODULE_ACTIONS = [
-        'pages' => ['list', 'create', 'update', 'delete', 'restore'],
-        'menus' => ['list', 'manage'],
+        'pages' => ['list', 'create', 'update', 'delete'],
+        'menus' => ['manage'],
         'users' => ['list', 'create', 'update', 'delete'],
         'roles' => ['list', 'create', 'update', 'delete'],
         'privileges' => ['list', 'create', 'update', 'delete'],
