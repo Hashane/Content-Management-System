@@ -47,3 +47,14 @@ export interface PaginatedResponse<T> {
     total: number;
   };
 }
+
+export type MenuItemType = 'group' | 'page';
+
+export interface AdminMenuItemNode {
+  id: number;
+  label: string;
+  item_type: MenuItemType;
+  page_id: number | null;
+  position: number;
+  children: AdminMenuItemNode[];
+}
