@@ -21,3 +21,29 @@ export interface AuthUser {
   roles: string[];
   privileges: string[];
 }
+
+export type PageStatus = 'draft' | 'published';
+
+export interface AdminPage {
+  id: number;
+  title: string;
+  slug: string;
+  body_html: string;
+  cover_image_url: string | null;
+  status: PageStatus;
+  published_at: string | null;
+  created_by: { id: number; name: string } | null;
+  updated_by: { id: number; name: string } | null;
+  deleted_at: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface PaginatedResponse<T> {
+  data: T[];
+  meta: {
+    current_page: number;
+    last_page: number;
+    total: number;
+  };
+}
