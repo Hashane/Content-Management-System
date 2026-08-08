@@ -22,13 +22,11 @@ Route::prefix('v1')->group(function (): void {
             Route::post('/pages/{page}/restore', [PageController::class, 'restore'])->withTrashed();
             Route::apiResource('pages', PageController::class);
 
-            Route::post('/menus/{menu}/restore', [MenuController::class, 'restore'])->withTrashed();
-            Route::get('/menus/{menu}/tree', [MenuController::class, 'tree']);
-            Route::post('/menus/{menu}/items', [MenuItemController::class, 'store']);
-            Route::put('/menus/{menu}/items/{item}', [MenuItemController::class, 'update']);
-            Route::patch('/menus/{menu}/items/{item}/move', [MenuItemController::class, 'move']);
-            Route::delete('/menus/{menu}/items/{item}', [MenuItemController::class, 'destroy']);
-            Route::apiResource('menus', MenuController::class);
+            Route::get('/menu/tree', [MenuController::class, 'tree']);
+            Route::post('/menu/items', [MenuItemController::class, 'store']);
+            Route::put('/menu/items/{item}', [MenuItemController::class, 'update']);
+            Route::patch('/menu/items/{item}/move', [MenuItemController::class, 'move']);
+            Route::delete('/menu/items/{item}', [MenuItemController::class, 'destroy']);
         });
     });
 });

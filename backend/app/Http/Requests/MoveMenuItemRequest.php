@@ -6,7 +6,6 @@ use App\Models\MenuItem;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
 class MoveMenuItemRequest extends FormRequest
 {
@@ -21,15 +20,10 @@ class MoveMenuItemRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'parent_id' => [
-                'nullable',
-                'integer',
-                Rule::exists('menu_items', 'id')->where('menu_id', $this->route('menu')?->id),
-            ],
+            'parent_id' => ['nullable', 'integer', 'exists:menu_items,id'],
             'position' => ['required', 'integer', 'min:0'],
         ];
     }
-
 
     public function withValidator(Validator $validator): void
     {

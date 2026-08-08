@@ -6,7 +6,6 @@ use App\Enums\MenuItemType;
 use App\Models\MenuItem;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Enum;
 
 class StoreMenuItemRequest extends FormRequest
@@ -31,11 +30,7 @@ class StoreMenuItemRequest extends FormRequest
                 'prohibited_if:item_type,group',
                 'exists:pages,id',
             ],
-            'parent_id' => [
-                'nullable',
-                'integer',
-                Rule::exists('menu_items', 'id')->where('menu_id', $this->route('menu')?->id),
-            ],
+            'parent_id' => ['nullable', 'integer', 'exists:menu_items,id'],
         ];
     }
 }

@@ -14,8 +14,10 @@ use Illuminate\Http\JsonResponse;
 
 class MenuItemController extends Controller
 {
-    public function store(StoreMenuItemRequest $request, Menu $menu): JsonResponse
+    public function store(StoreMenuItemRequest $request): JsonResponse
     {
+        $menu = Menu::firstOrFail();
+
         $data = $request->validated();
         $data['menu_id'] = $menu->id;
         $data['position'] = MenuItem::where('menu_id', $menu->id)
@@ -28,19 +30,15 @@ class MenuItemController extends Controller
         return response()->success(new MenuItemResource($item), 'Menu item created.', 201);
     }
 
-    public function update(UpdateMenuItemRequest $request, Menu $menu, MenuItem $item): JsonResponse
+    public function update(UpdateMenuItemRequest $request, MenuItem $item): JsonResponse
     {
-        abort_if($item->menu_id !== $menu->id, 404);
-
         $item->update($request->validated());
 
         return response()->success(new MenuItemResource($item->fresh()), 'Menu item updated.');
     }
 
-    public function destroy(Menu $menu, MenuItem $item): JsonResponse
+    public function destroy(MenuItem $item): JsonResponse
     {
-        abort_if($item->menu_id !== $menu->id, 404);
-
         $this->authorize('delete', $item);
 
         $item->delete();
@@ -48,9 +46,9 @@ class MenuItemController extends Controller
         return response()->success(null, 'Menu item deleted.');
     }
 
-    public function move(MoveMenuItemRequest $request, Menu $menu, MenuItem $item, MenuTreeService $service): JsonResponse
+    public function move(MoveMenuItemRequest $request, MenuItem $item, MenuTreeService $service): JsonResponse
     {
-        abort_if($item->menu_id !== $menu->id, 404);
+        $menu = Menu::firstOrFail();
 
         $tree = $service->move($menu, $item, $request->validated('parent_id'), $request->validated('position'));
 
