@@ -14,9 +14,9 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        $middleware->statefulApi();
         $middleware->prepend(AddSecurityHeaders::class);
-        $middleware->prepend(EnsureFrontendRequestsAreStateful::class);
-
+       
         // Avoids false CSRF failures for token clients sharing a stateful domain (e.g. localhost).
         $middleware->validateCsrfTokens(except: [
             'api/v1/auth/tokens',
