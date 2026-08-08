@@ -13,3 +13,11 @@ export interface MenuItemNode {
   page: { slug: string; title: string } | null;
   children: MenuItemNode[];
 }
+
+export interface AuthUser {
+  id: number;
+  name: string;
+  email: string;
+  roles: string[];
+  privileges: string[];
+}
