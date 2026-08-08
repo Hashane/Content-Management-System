@@ -1,9 +1,10 @@
 # CMS
+
 A small CMS Laravel API backend + React frontend.
 
 ## Tooling
 
-Laravel best practices are enforced via [judehashane/seatbelt](https://github.com/Hashane/Seatbelt), my own opinionated Laravel standards package.
+Laravel best practices are enforced via my own package **[SEATBELT](https://github.com/Hashane/Seatbelt)** ⚠️
 
 ## Project layout
 
@@ -108,3 +109,5 @@ pnpm build
 Authorization uses `spatie/laravel-permission`. Policies check `$user->can('pages.delete')`, not role names. Admin has every permission, Moderator has `pages.list` / `pages.create` / `pages.update`.
 
 Page visibility (`Page::publishedAndDue()`) is a query scope, checked on every page fetch. A page goes live the moment its `published_at` passes, no cron needed.
+
+Every page tracks who created and last updated it (`created_by` / `updated_by`), stamped automatically by `PageObserver`. Deletes are soft, with an admin restore endpoint.
