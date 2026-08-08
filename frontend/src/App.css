@@ -306,3 +306,20 @@
 .menu-row-delete {
   margin-left: auto;
 }
+
+.privilege-grid th,
+.privilege-grid td {
+  text-align: center;
+}
+
+.privilege-grid th:first-child,
+.privilege-grid td:first-child {
+  text-align: left;
+  font-family: var(--mono);
+  font-size: 13px;
+}
+
+.privilege-grid-cell input {
+  width: 16px;
+  height: 16px;
+}
