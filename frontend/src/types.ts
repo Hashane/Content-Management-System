@@ -58,3 +58,12 @@ export interface AdminMenuItemNode {
   position: number;
   children: AdminMenuItemNode[];
 }
+
+export interface FlatMenuNode {
+  id: number;
+  label: string;
+  item_type: MenuItemType;
+  page_id: number | null;
+  depth: number;
+  parentId: number | null;
+}
