@@ -15,8 +15,8 @@ function App() {
       <Route path="/admin/login" element={<LoginPage />} />
       <Route element={<RequireAuth />}>
         <Route path="/admin" element={<AdminLayout />}>
-          <Route path="pages" element={<p>Pages admin — coming next.</p>} />
-          <Route path="menu" element={<p>Menu admin — coming next.</p>} />
+          <Route path="pages" element={<p>Pages admin.</p>} />
+          <Route path="menu" element={<p>Menu admin.</p>} />
         </Route>
       </Route>
     </Routes>
