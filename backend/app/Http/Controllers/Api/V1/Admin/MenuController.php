@@ -7,6 +7,7 @@ use App\Http\Requests\StoreMenuRequest;
 use App\Http\Requests\UpdateMenuRequest;
 use App\Http\Resources\MenuResource;
 use App\Models\Menu;
+use App\Services\MenuTreeService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -64,5 +65,12 @@ class MenuController extends Controller
         $menu->restore();
 
         return response()->success(new MenuResource($menu->fresh()), 'Menu restored.');
+    }
+
+    public function tree(Menu $menu, MenuTreeService $service): JsonResponse
+    {
+        $this->authorize('view', $menu);
+
+        return response()->success($service->getTree($menu));
     }
 }

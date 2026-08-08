@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\V1\Admin\MenuController;
+use App\Http\Controllers\Api\V1\Admin\MenuItemController;
 use App\Http\Controllers\Api\V1\Admin\PageController;
 use App\Http\Controllers\Api\V1\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Api\V1\Auth\MeController;
@@ -22,6 +23,11 @@ Route::prefix('v1')->group(function (): void {
             Route::apiResource('pages', PageController::class);
 
             Route::post('/menus/{menu}/restore', [MenuController::class, 'restore'])->withTrashed();
+            Route::get('/menus/{menu}/tree', [MenuController::class, 'tree']);
+            Route::post('/menus/{menu}/items', [MenuItemController::class, 'store']);
+            Route::put('/menus/{menu}/items/{item}', [MenuItemController::class, 'update']);
+            Route::patch('/menus/{menu}/items/{item}/move', [MenuItemController::class, 'move']);
+            Route::delete('/menus/{menu}/items/{item}', [MenuItemController::class, 'destroy']);
             Route::apiResource('menus', MenuController::class);
         });
     });
