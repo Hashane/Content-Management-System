@@ -2,7 +2,7 @@ import { NavLink, Outlet } from 'react-router-dom';
 import { useAuth } from '../../auth/AuthContext';
 
 export function AdminLayout() {
-  const { user, logout } = useAuth();
+  const { user, logout, can } = useAuth();
 
   return (
     <div className="admin-shell">
@@ -11,6 +11,7 @@ export function AdminLayout() {
         <nav>
           <NavLink to="/admin/pages">Pages</NavLink>
           <NavLink to="/admin/menu">Menu</NavLink>
+          {can('roles.list') && <NavLink to="/admin/roles">Roles &amp; Privileges</NavLink>}
         </nav>
         <div className="admin-user">
           <span>{user?.name}</span>

@@ -6,6 +6,7 @@ import { AdminLayout } from './pages/admin/AdminLayout';
 import { PagesListPage } from './pages/admin/PagesListPage';
 import { PageFormPage } from './pages/admin/PageFormPage';
 import { MenuBuilderPage } from './pages/admin/MenuBuilderPage';
+import { RolePrivilegesPage } from './pages/admin/RolePrivilegesPage';
 import { RequireAuth } from './auth/RequireAuth';
 import './App.css';
 
@@ -22,6 +23,7 @@ function App() {
           <Route path="pages/new" element={<PageFormPage />} />
           <Route path="pages/:id/edit" element={<PageFormPage />} />
           <Route path="menu" element={<MenuBuilderPage />} />
+          <Route path="roles" element={<RolePrivilegesPage />} />
         </Route>
       </Route>
     </Routes>
