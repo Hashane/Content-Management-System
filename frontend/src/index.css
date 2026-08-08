@@ -58,6 +58,12 @@
   box-sizing: border-box;
 }
 
+#root:has(.admin-shell) {
+  max-width: none;
+  margin: 0;
+  padding: 0;
+}
+
 a {
   color: var(--accent);
 }
