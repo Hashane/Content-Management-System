@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\V1\Admin;
 
+use App\Actions\Pages\SavePageAction;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\PageIndexRequest;
 use App\Http\Requests\StorePageRequest;
@@ -9,8 +10,6 @@ use App\Http\Requests\UpdatePageRequest;
 use App\Http\Resources\PageResource;
 use App\Models\Page;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Storage;
-use Mews\Purifier\Facades\Purifier;
 
 class PageController extends Controller
 {
@@ -30,18 +29,9 @@ class PageController extends Controller
         return response()->success(PageResource::collection($pages)->response()->getData(true));
     }
 
-    public function store(StorePageRequest $request): JsonResponse
+    public function store(StorePageRequest $request, SavePageAction $action): JsonResponse
     {
-        $data = $request->validated();
-        unset($data['cover_image']);
-        $data['slug'] = Page::resolveUniqueSlug($data['slug'] ?? null, $data['title']);
-        $data['body_html'] = Purifier::clean($data['body_html']);
-
-        if ($request->hasFile('cover_image')) {
-            $data['cover_image_path'] = $request->file('cover_image')->store('pages/covers', 'public');
-        }
-
-        $page = Page::create($data);
+        $page = $action->handle($request->safe()->except(['cover_image']), $request->file('cover_image'));
 
         return response()->success(new PageResource($page->load(['creator', 'updater'])), 'Page created.', 201);
     }
@@ -53,25 +43,9 @@ class PageController extends Controller
         return response()->success(new PageResource($page->load(['creator', 'updater'])));
     }
 
-    public function update(UpdatePageRequest $request, Page $page): JsonResponse
+    public function update(UpdatePageRequest $request, Page $page, SavePageAction $action): JsonResponse
     {
-        $data = $request->validated();
-        unset($data['cover_image']);
-        $data['slug'] = Page::resolveUniqueSlug($data['slug'] ?? null, $data['title'], $page->id);
-        $data['body_html'] = Purifier::clean($data['body_html']);
-
-        $previousCoverPath = $page->cover_image_path;
-
-        if ($request->hasFile('cover_image')) {
-            $data['cover_image_path'] = $request->file('cover_image')->store('pages/covers', 'public');
-        }
-
-        $page->update($data);
-
-        // Only remove the old file once updated
-        if ($request->hasFile('cover_image') && $previousCoverPath) {
-            Storage::disk('public')->delete($previousCoverPath);
-        }
+        $page = $action->handle($request->safe()->except(['cover_image']), $request->file('cover_image'), $page);
 
         return response()->success(new PageResource($page->fresh(['creator', 'updater'])), 'Page updated.');
     }
