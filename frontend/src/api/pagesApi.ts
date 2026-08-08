@@ -5,6 +5,7 @@ export interface PageListParams {
   search?: string;
   status?: PageStatus;
   page?: number;
+  per_page?: number;
 }
 
 export interface PagePayload {
