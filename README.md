@@ -2,6 +2,12 @@
 
 A small CMS Laravel API backend + React frontend.
 
+## Preview
+
+| Public site | Admin panel | API docs |
+|---|---|---|
+| ![Public site](screenshots/public.png) | ![Admin panel](screenshots/admin.png) | ![API docs](screenshots/docs.png) |
+
 ## Tooling
 
 Laravel best practices are enforced via my own package **[SEATBELT](https://github.com/Hashane/Seatbelt)** ⚠️
@@ -82,6 +88,12 @@ http://localhost:8000/docs/api
 ```
 
 Generated straight from the routes/FormRequests, no hand-written annotations to keep in sync.
+
+The same document is also available as raw OpenAPI JSON, useful for importing into Postman/Insomnia or generating a client:
+
+```
+http://localhost:8000/docs/api.json
+```
 
 ## Running tests
 
