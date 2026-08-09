@@ -13,6 +13,8 @@ backend/    Laravel API
 frontend/   React app (public site + admin panel)
 ```
 
+Flutter app (consumes the public API): [Hashane/cms-app](https://github.com/Hashane/cms-app)
+
 ## Backend setup
 
 ```
